@@ -1,7 +1,7 @@
 const path = require('path')
 const express = require('express')
 const session = require('express-session')
-// const MongoStore = require('connect-mongo')(session)
+const MongoStore = require('connect-mongo')(session)
 const flash = require('connect-flash')
 const config = require('config-lite')(__dirname)
 const routes = require('./routes')
@@ -24,10 +24,10 @@ app.use(session({
   saveUninitialized: false, // 设置为 false，强制创建一个 session，即使用户未登录
   cookie: {
     maxAge: config.session.maxAge// 过期时间，过期后 cookie 中的 session id 自动删除
-  }
-  //   store: new MongoStore({// 将 session 存储到 mongodb
-  //     url: config.mongodb// mongodb 地址
-  //   })
+  },
+  store: new MongoStore({// 将 session 存储到 mongodb
+    url: config.mongodb// mongodb 地址
+  })
 }))
 
 // flash 中间件，用来显示通知
